@@ -207,7 +207,7 @@ public class TupleSchema {
       if (i > 0) result.append(", ");
       result.append(getAttributeAt(i).getName());
       result.append(": ");
-      result.append(getAttributeAt(i).getType().name());
+      result.append(TypeInfo.getTypeInfo(getAttributeAt(i).getType()).name());
       if (!getAttributeAt(i).isNullable()) result.append(" NOT NULL");
     }
     return result.toString();
