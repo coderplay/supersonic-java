@@ -1,4 +1,5 @@
-supersonic-java
+Pure Java Supersonic
 ===============
 
-Pure java implementation of Google's supersonic, a columnar sql engine
+Pure java implementation of Google's supersonic, a columnar query engine
+
