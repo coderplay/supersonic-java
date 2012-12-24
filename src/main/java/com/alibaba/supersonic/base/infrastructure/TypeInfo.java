@@ -46,6 +46,7 @@ public class TypeInfo {
     this.type = type;
     this.name = type.name();
     this.size = size;
+    // FIXME: correct log2Size
     this.log2Size = -1;
     this.isNumeric = isNumeric;
     this.isInteger = isInteger;
