@@ -115,7 +115,7 @@ public class Column {
    */
   void resetFrom(final Column other) {
     checkInitialized();
-    Preconditions.checkState(typeInfo().type().equals(other.typeInfo().type()),  
+    Preconditions.checkArgument(typeInfo().type().equals(other.typeInfo().type()),  
         "Type mismatch; trying to reset " +  typeInfo().name() + " from "
         + other.typeInfo().name());
     reset(other.data(), other.isNull());
@@ -129,7 +129,7 @@ public class Column {
    */
   void resetFromPlusOffset(final Column other, final int offset) {
     checkInitialized();
-    Preconditions.checkState(typeInfo().type().equals(other.typeInfo().type()),
+    Preconditions.checkArgument(typeInfo().type().equals(other.typeInfo().type()),
         "Type mismatch; trying to reset " + typeInfo().name() + " from "
             + other.typeInfo().name());
     List d = other.data();
