@@ -19,8 +19,12 @@ package com.alibaba.supersonic.base.infrastructure;
 import java.util.List;
 import java.util.Map;
 
+import com.alibaba.supersonic.base.exception.SupersonicException;
 import com.alibaba.supersonic.proto.CommonEnums.DataType;
 import com.alibaba.supersonic.proto.CommonEnums.Nullability;
+import com.alibaba.supersonic.proto.CommonEnums.ReturnCode;
+import com.alibaba.supersonic.utils.exception.FailureOr;
+import com.alibaba.supersonic.utils.exception.FailureOrs;
 import com.google.common.base.Preconditions;
 
 /**
@@ -168,13 +172,31 @@ public class TupleSchema {
    * @param b
    * @return
    */
-  public TupleSchema merge(final TupleSchema a, final TupleSchema b) {
-//    FailureOr<TupleSchema> result = TryMerge(a, b);
-//    CHECK(result.is_success())
-//        << "TupleSchema::Merge failed, "
-//        << result.exception().PrintStackTrace();
-//    return result.get();
-    return null;
+  public TupleSchema merge(final TupleSchema a, final TupleSchema b)
+      throws SupersonicException {
+    FailureOr<TupleSchema> result = tryMerge(a, b);
+    Preconditions.checkState(result.isSuccess(), "TupleSchema::Merge failed, "
+        + result.exception().getMessage());
+    return result.get();
+  }
+  
+  // Like Merge, but when the schemas can't be merged, returns a failure instead
+  // of failing a CHECK.
+  static FailureOr<TupleSchema> tryMerge(final TupleSchema a,
+                                           final TupleSchema b) 
+      throws SupersonicException {
+    TupleSchema result = new TupleSchema(a);
+
+    for (int i = 0; i < b.attributeCount(); ++i) {
+      if (!result.addAttribute(b.getAttributeAt(i))) {
+
+        throw new SupersonicException(ReturnCode.ERROR_ATTRIBUTE_EXISTS,
+            "Can't merge schemas, ambiguous attribute name: "
+                + b.getAttributeAt(i).getName());
+      }
+    }
+
+    return FailureOrs.success(result);
   }
   
   /**
